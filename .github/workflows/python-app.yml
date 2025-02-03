@@ -1,0 +1,41 @@
+name: DoVi
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+          python -m pip install --upgrade pip
+          python -m pip install pytest pytest-mock
+
+      - name: Run Xvfb
+        run: |
+          Xvfb :99 -screen 0 1024x768x16 & # Start Xvfb
+          sleep 5 # Set some time to start
+          export DISPLAY=:99 # Set DISPLAY variable
+          echo "Xvfb started on display $DISPLAY" # Logger
+
+      - name: Run tests with pytest
+        run: |
+          export DISPLAY=:99
+          python -m pytest tests/ --maxfail=1 # Set max fail to 1
