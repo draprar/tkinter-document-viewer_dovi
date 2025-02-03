@@ -27,7 +27,8 @@ jobs:
           sudo apt-get install -y xvfb
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install ttkbootstrap pymupdf pillow ebooklib tkhtmlview
+          pip install ttkbootstrap pymupdf==1.22.5 pillow ebooklib tkhtmlview
+          pip install --no-cache-dir --force-reinstall pymupdf
           python -m pip install pytest pytest-mock
 
       - name: Run Xvfb
