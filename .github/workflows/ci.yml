@@ -1,75 +1,118 @@
-name: CI — audit, lint, tests
+name: DoVi
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
-  audit-and-test:
+  lint:
+    name: Lint and Format Check
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.11, 3.12]
 
     steps:
-      - name: Checkout
+      - name: Check out the repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.11"
 
-      - name: Cache pip
+      - name: Cache pip dependencies
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+          key: ${{ runner.os }}-pip-lint-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-lint-
 
-      - name: Install runtime dependencies
+      - name: Install linting tools
         run: |
+          python -m pip install --upgrade pip
+          pip install flake8 black mypy
+
+      - name: Run flake8 (PEP8 compliance)
+        run: flake8 . --max-line-length=120 --statistics --exclude=venv,.venv,build,dist
+
+      - name: Check code formatting with black
+        run: black --check --line-length=120 main.py document_backend.py logger.py test_main.py test_document_backend.py
+
+      - name: Run mypy (type checking)
+        run: mypy main.py document_backend.py --ignore-missing-imports
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-security-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-security-
+
+      - name: Install security tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit pip-audit
+
+      - name: Run bandit (security vulnerability scanner)
+        run: bandit -r main.py document_backend.py logger.py -ll
+
+      - name: Install dependencies for pip-audit
+        run: pip install -r requirements.txt
+
+      - name: Run pip-audit (dependency vulnerability scanner)
+        run: pip-audit
+
+  test:
+    name: Run Tests
+    needs: lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-test-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-test-
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run pip-audit (runtime deps)
+      - name: Start Xvfb and export DISPLAY
         run: |
-          python -m pip install pip-audit
-          python -m pip_audit --format=json > results/pip_audit_prod.json || true
-        continue-on-error: true
+          Xvfb :99 -screen 0 1024x768x16 &
+          sleep 2
+          echo "DISPLAY=:99" >> $GITHUB_ENV
 
-      - name: Upload pip-audit artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: pip_audit_prod
-          path: results/pip_audit_prod.json
-
-      - name: Install dev dependencies
-        run: |
-          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-
-      - name: Lint (ruff)
-        run: |
-          python -m pip install ruff
-          ruff check . || true
-
-      - name: Lint (flake8)
-        run: |
-          if command -v flake8 >/dev/null 2>&1; then flake8 . --max-line-length=120 || true; fi
-
-      - name: Run headless tests
-        env:
-          HEADLESS: '1'
-        run: |
-          pytest -q --maxfail=1 || exit 1
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pytest-results-${{ matrix.python-version }}
-          path: .
-
+      - name: Run tests with pytest
+        run: python -m pytest -v --maxfail=1 --tb=short
