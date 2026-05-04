@@ -20,8 +20,7 @@ def viewer(mock_root):
         canvas_instance = MagicMock()
         mock_canvas.return_value = canvas_instance
 
-        with patch.object(DocumentViewer, "create_widgets"), \
-             patch.object(DocumentViewer, "bind_events"):
+        with patch.object(DocumentViewer, "create_widgets"), patch.object(DocumentViewer, "bind_events"):
 
             viewer = DocumentViewer(mock_root)
             viewer.canvas = canvas_instance

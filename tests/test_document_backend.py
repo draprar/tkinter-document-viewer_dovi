@@ -38,12 +38,7 @@ def test_page_count_epub(backend):
 
 def test_search_pdf_returns_results(backend):
     mock_page = MagicMock()
-    mock_rect = MagicMock(
-        x0=1,
-        y0=2,
-        x1=3,
-        y1=4
-    )
+    mock_rect = MagicMock(x0=1, y0=2, x1=3, y1=4)
 
     mock_page.search_for.return_value = [mock_rect]
 
