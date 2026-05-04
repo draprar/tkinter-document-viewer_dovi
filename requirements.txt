@@ -1,14 +1,22 @@
-﻿# Core dependencies for Document Viewer (DoVI)
-# GUI Framework
+﻿# GUI Framework
 ttkbootstrap==1.10.1
+
 # Document handling
 PyMuPDF==1.25.2
 ebooklib==0.18
 mobi==0.3.3
+
 # Image processing
-Pillow==12.2.0
-# HTML rendering for EPUB/MOBI (optional)
-# tkhtmlview is optional and can be installed separately if needed
-# pip install tkhtmlview
-# Development / testing tools are intentionally omitted from this file.
-# To install development tools, see `requirements-dev.txt`.
+Pillow==10.4.0
+
+# HTML rendering for EPUB/MOBI
+tkhtmlview==0.3.1
+# Testing
+pytest==8.3.4
+pytest-mock==3.14.0
+# Code quality tools
+flake8==7.1.1
+black==24.10.0
+mypy==1.13.0
+# Security scanning
+pip-audit==2.6.10
