@@ -42,7 +42,7 @@ jobs:
         run: black --check --line-length=120 .
 
       - name: Run mypy (type checking)
-        run: mypy . --ignore-missing-imports.
+        run: mypy . --ignore-missing-imports
 
   security:
     name: Security Scan
