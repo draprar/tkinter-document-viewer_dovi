@@ -1,22 +1,25 @@
 ﻿# GUI Framework
-ttkbootstrap==1.10.1
+ttkbootstrap
 
 # Document handling
-PyMuPDF==1.25.2
-ebooklib==0.18
-mobi==0.3.3
+PyMuPDF
+ebooklib
+mobi
 
 # Image processing
-Pillow==10.4.0
+Pillow
 
 # HTML rendering for EPUB/MOBI
-tkhtmlview==0.3.1
+tkhtmlview
+
 # Testing
-pytest==8.3.4
-pytest-mock==3.14.0
+pytest
+pytest-mock
+
 # Code quality tools
-flake8==7.1.1
-black==24.10.0
-mypy==1.13.0
+flake8
+black
+mypy
+
 # Security scanning
-pip-audit==2.6.10
+pip-audit
