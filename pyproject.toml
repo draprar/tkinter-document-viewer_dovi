@@ -1,0 +1,92 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tkinter-document-viewer-dovi"
+version = "1.0.0"
+description = "A lightweight Python/Tkinter app for reading PDFs, EPUBs, and MOBIs"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Walery", email = ""},
+]
+keywords = ["tkinter", "pdf", "epub", "mobi", "viewer", "document"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Office/Business",
+    "Topic :: Multimedia :: Graphics :: Viewers",
+]
+
+dependencies = [
+    "ttkbootstrap>=1.10.1",
+    "PyMuPDF>=1.25.2",
+    "ebooklib>=0.18",
+    "mobi>=0.3.3",
+    "Pillow>=10.4.0",
+    "tkhtmlview>=0.3.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.4",
+    "pytest-mock>=3.14.0",
+    "flake8>=7.1.1",
+    "black>=24.10.0",
+    "mypy>=1.13.0",
+    "pip-audit>=2.6.10",
+    "bandit>=1.7.5",
+    "pre-commit>=3.5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/draprar/tkinter-document-viewer_dovi"
+"Bug Tracker" = "https://github.com/draprar/tkinter-document-viewer_dovi/issues"
+"Source Code" = "https://github.com/draprar/tkinter-document-viewer_dovi"
+
+[tool.black]
+line-length = 120
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = ["test_.*\\.py"]
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+python_files = ["test_*.py"]
+addopts = "-v --strict-markers"
+markers = [
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.isort]
+profile = "black"
+line_length = 120
+skip_gitignore = true
+known_first_party = ["logger", "main"]
+
