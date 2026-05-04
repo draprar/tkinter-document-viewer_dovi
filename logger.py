@@ -50,4 +50,3 @@ def setup_logging(log_level: str = "INFO", log_file: Optional[str] = None) -> lo
 
 # Global logger instance
 logger = setup_logging()
-
