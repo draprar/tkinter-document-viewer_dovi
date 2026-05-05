@@ -17,8 +17,8 @@ Open PDFs, EPUBs, or MOBIs → zoom in, search text, flip pages, or go fullscree
 ## 🚀 Quickstart
 ### Clone the repository:
 ```bash
-  git clone https://github.com/draprar/tkinter-document-viewer_dovi.git
-  cd tkinter-document-viewer_dovi
+  git clone https://github.com/draprar/tkinter-document-viewer.git
+  cd tkinter-document-viewer
 ```
 
 ### Create and activate virtual environment (recommended):
@@ -39,37 +39,6 @@ Open PDFs, EPUBs, or MOBIs → zoom in, search text, flip pages, or go fullscree
 Run the application:
 ```bash
   python main.py
-```
-
-## 🧪 Testy (headless)
-W środowiskach bez GUI (CI lub serwery) testy można uruchomić w trybie headless.
-Ustaw zmienną środowiskową `HEADLESS` przed uruchomieniem pytest:
-
-PowerShell:
-```powershell
-$env:HEADLESS='1'
-python -m pytest -q
-```
-
-Albo uruchom z coverage:
-```powershell
-$env:HEADLESS='1'
-python -m pytest --cov=./ -q
-```
-
-Testy jednostkowe zostały dostosowane do pracy bez rzeczywistego widgetu Tk.
-
-## ⚠️ Wymagania opcjonalne
-Niektóre funkcje wymagają dodatkowych bibliotek, które nie są konieczne do
-uruchomienia testów:
-
-- PyMuPDF (`fitz`) — wymagane do otwierania i renderowania plików PDF
-- `mobi` — opcjonalne wsparcie dla MOBI
-- `tkhtmlview` — renderowanie HTML w niektórych trybach EPUB/MOBI
-
-Zainstaluj je tylko gdy chcesz używać tych funkcji:
-```powershell
-pip install PyMuPDF mobi tkhtmlview
 ```
 
 ### Keyboard Shortcuts
